@@ -3,26 +3,22 @@
 import mailchimp from '@mailchimp/mailchimp_marketing';
 
 import { getRecipientListId, MailchimpCampain } from '@/types/mailchimp';
+import { SendCampaignErrorCode, SendCampaignResult } from '@/types/mailchimp-errors';
 
-mailchimp.setConfig({
-    server: process.env.MAILCHIMP_SERVER_PREFIX,
-    apiKey: process.env.MAILCHIMP_API_KEY,
-});
-
-export enum SendCampaignErrorCode {
-    CantCreateCampaign,
-    CantCreateCampaignForRecipientList,
-    FailedToAttachContentToCampaign,
-    Unknown,
+function getMailchimpClient() {
+    mailchimp.setConfig({
+        server: process.env.MAILCHIMP_SERVER_PREFIX,
+        apiKey: process.env.MAILCHIMP_API_KEY,
+    });
+    return mailchimp;
 }
-
-type SendCampaignResult = { status: 'success' } | { status: 'error'; error: SendCampaignErrorCode };
 
 export async function sendCampaign(campainInfo: MailchimpCampain): Promise<SendCampaignResult> {
     try {
         const recipientsListId = getRecipientListId(campainInfo.recipients);
 
-        const campaign = await mailchimp.campaigns.create({
+        const mc = getMailchimpClient();
+        const campaign = await mc.campaigns.create({
             type: 'regular',
             recipients: { list_id: recipientsListId },
             settings: {
@@ -41,7 +37,7 @@ export async function sendCampaign(campainInfo: MailchimpCampain): Promise<SendC
                 error: SendCampaignErrorCode.CantCreateCampaignForRecipientList,
             };
 
-        const response = await mailchimp.campaigns.setContent(campaign.id, {
+        const response = await mc.campaigns.setContent(campaign.id, {
             plain_text: campainInfo.plainText,
             html: campainInfo.html ?? `<pre>${campainInfo.plainText}</pre>`,
         });
@@ -52,7 +48,7 @@ export async function sendCampaign(campainInfo: MailchimpCampain): Promise<SendC
                 error: SendCampaignErrorCode.FailedToAttachContentToCampaign,
             };
 
-        await mailchimp.campaigns.send(campaign.id);
+        await mc.campaigns.send(campaign.id);
 
         return { status: 'success' };
     } catch (e: unknown) {

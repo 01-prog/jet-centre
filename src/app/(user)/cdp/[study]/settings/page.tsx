@@ -95,7 +95,7 @@ function LoadingFallback({ title }: Title) {
     );
 }
 
-export function ErrorBoxComponent({ title }: Title) {
+function ErrorBoxComponent({ title }: Title) {
     return (
         <FakeBox title={title}>
             <div className="p-6">

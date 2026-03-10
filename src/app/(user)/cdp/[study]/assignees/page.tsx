@@ -1,3 +1,7 @@
+import { Box, BoxContent, BoxHeader, BoxTitle } from '@/components/boxes/boxes';
+import { StudyParams } from '@/routes';
+
+import { getStudyAssignees } from './actions';
 import ClientsAssignees from './clientsAssignees';
 
 export const metadata = {
@@ -22,55 +26,38 @@ export interface Assignee {
     interview?: InterviewElt[];
 }
 
-const assignees: [Assignee, ...Assignee[]] = [
-    {
-        firstname: 'Jean',
-        lastname: 'Dupont',
-        email: 'jean.dupont@telecom-paris.fr',
-        experience:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        knowledge:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        ideas: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        je_experience:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        cv_path:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-    },
-    {
-        firstname: 'Bob',
-        lastname: 'BOB',
-        email: 'bob.bob@gmail.fr',
-        experience:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        knowledge:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        ideas: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        je_experience:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        cv_path:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-    },
-    {
-        firstname: 'Nicolas',
-        lastname: 'Glady',
-        email: 'nicolas-glady.president@admin-telecom-etude.fr',
-        experience:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        knowledge:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        ideas: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        je_experience:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-        cv_path:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus dolor sit amet felis ornare rhoncus. Pellentesque accumsan tincidunt iaculis. Cras posuere quam a mi accumsan, eu dapibus tellus commodo. Mauris aliquet tellus risus, at feugiat nunc pulvinar nec. Phasellus eu augue sit amet urna vestibulum tempor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ac euismod justo. Sed ultricies velit ut diam pulvinar fringilla. Ut maximus condimentum tincidunt. Nullam commodo magna in nisi sollicitudin tincidunt. Vestibulum viverra turpis ac tellus pulvinar, dictum eleifend massa consequat. Aenean arcu tellus, rhoncus in mollis quis, laoreet ac tortor. Nunc mollis velit at hendrerit euismod. In vel ex quam. Ut lacinia turpis vitae nisl sodales, ut bibendum elit consequat.',
-    },
-];
+export default async function Assignees({ params }: StudyParams) {
+    const { study } = await params;
+    const data = await getStudyAssignees(study);
 
-export default function Assignees() {
+    if (!data || data.length === 0) {
+        return (
+            <div className="flex space-x-main h-full">
+                <Box className="w-full">
+                    <BoxHeader>
+                        <BoxTitle>Sélection des intervenants</BoxTitle>
+                    </BoxHeader>
+                    <BoxContent>
+                        <div className="flex items-center justify-center p-8 text-muted-foreground">
+                            <p>
+                                Aucune candidature reçue pour le moment. Les candidatures
+                                apparaîtront ici après l&apos;envoi du MRI.
+                            </p>
+                        </div>
+                    </BoxContent>
+                </Box>
+            </div>
+        );
+    }
+
+    const assignees: Assignee[] = data.map((d) => ({
+        ...d,
+        email: d.email ?? '',
+    }));
+
     return (
         <div className="flex space-x-main h-full">
-            <ClientsAssignees assignees={assignees} />
+            <ClientsAssignees assignees={assignees as [Assignee, ...Assignee[]]} />
         </div>
     );
 }

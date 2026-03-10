@@ -11,6 +11,7 @@ model Study {
   mris               Mri[]
   studyAssignees     StudyAssignee[]
   studyProceedingsId String?
+  notes              StudyNote[]
 }
 
 /// Information about a study
@@ -112,4 +113,17 @@ enum DeliverableStatus {
   Finished
   /// PVRI.F signed and deliverable given to the client.
   Given
+}
+
+/// Notes attached to a study (meeting notes, client notes, etc.)
+model StudyNote {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @default("")
+  /// Display order of the note within the study
+  position  Int      @default(0)
+  study     Study    @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  studyId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

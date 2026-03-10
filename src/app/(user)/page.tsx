@@ -1,12 +1,15 @@
-import FilesBrowser from '@/components/google/file-browser';
-import MailBrowser from '@/components/google/mail-browser';
-import { MailSender } from '@/components/google/mail-sender';
+import { Suspense } from 'react';
+
 import { LogoBird } from '@/components/logo/logo';
+import { getViewer } from '@/data/user';
+import { getUserStudies } from '@/data/user';
+
+import { StudySummaryList } from './study-summary';
 
 export default async function HomePage() {
     return (
         <div className="flex w-full h-full place-items-center justify-center">
-            <div className="p-main flex flex-col items-center gap-main">
+            <div className="p-main flex flex-col items-center gap-main w-full max-w-4xl">
                 <div className="flex flex-col items-center gap-2">
                     <LogoBird />
                     <h1 className="text-3xl">
@@ -21,17 +24,18 @@ export default async function HomePage() {
                     Si vous ne voyez pas de sidebar, c&apos;est que votre rôle a été mal défini.
                     Dans ce cas n&apos;hésitez pas à contacter le pôle info.
                 </p>
+                <Suspense>
+                    <UserStudiesSummary />
+                </Suspense>
             </div>
         </div>
     );
 }
 
-// TODO: Fonctions non utilisées ici
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function dummy() {
-    <div>
-        <FilesBrowser />
-        <MailBrowser />
-        <MailSender />
-    </div>;
+async function UserStudiesSummary() {
+    const viewerResult = await getViewer();
+    if (viewerResult.status !== 'success') return null;
+    const studies = await getUserStudies(viewerResult.viewer);
+    if (studies.length === 0) return null;
+    return <StudySummaryList studies={studies} />;
 }

@@ -87,9 +87,8 @@ export function StudyProceedingsParamsEditor({
             getStudyProceedings(studyCode).then((serverProceeding) => {
                 if (
                     serverProceeding &&
-                    serverProceeding.serverStudyProceeding.studyProcessStep == newStep
+                    checkEqual(serverProceeding.serverStudyProceeding, form.getValues())
                 ) {
-                    // TODO: check everything
                     setStatus(UpdateBoxStatus.Ok);
                 } else {
                     setStatus(UpdateBoxStatus.NotSynced);

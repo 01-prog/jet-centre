@@ -51,6 +51,24 @@ export function StudyPhaseEditor({ open, close, defaultValues, onSubmit }: Study
 
     const [deliverable, setDeliverable] = useState(!!defaultValues?.deliverable);
 
+    const handleSubmit = (values: StudyPhaseFormType) => {
+        if (!deliverable) {
+            values.deliverable = undefined;
+        }
+        onSubmit(values);
+    };
+
+    const handleStartDateChange = () => {
+        const startDate = form.getValues('startDate');
+        const jehs = form.getValues('jehs');
+        if (startDate && jehs > 0) {
+            const start = new Date(startDate);
+            const estimatedDays = jehs * 7;
+            const endDate = new Date(start.getTime() + estimatedDays * 24 * 60 * 60 * 1000);
+            form.setValue('endDate', endDate);
+        }
+    };
+
     return (
         <Dialog open={open} onOpenChange={() => close()}>
             <DialogContent>
@@ -61,7 +79,7 @@ export function StudyPhaseEditor({ open, close, defaultValues, onSubmit }: Study
                     <FormProvider {...form}>
                         <form
                             className="gap-y-main w-full flex flex-col"
-                            onSubmit={form.handleSubmit(onSubmit)}
+                            onSubmit={form.handleSubmit(handleSubmit)}
                         >
                             <InputFormElement form={form} label="Titre" name="title" />
                             <InputFormElement
@@ -81,8 +99,9 @@ export function StudyPhaseEditor({ open, close, defaultValues, onSubmit }: Study
                                 label="Date de début"
                                 name="startDate"
                                 type="date"
+                                onBlur={handleStartDateChange}
                             />
-                            <InputFormElement //TODO: auto compute end date
+                            <InputFormElement
                                 form={form}
                                 label="Date de fin"
                                 name="endDate"
@@ -111,15 +130,7 @@ export function StudyPhaseEditor({ open, close, defaultValues, onSubmit }: Study
                                     />
                                 </>
                             )}
-                            <Button
-                                type="submit"
-                                // onClick={(e) => {
-                                //     e.preventDefault();
-                                //     onSubmit(form.watch()); //TODO: handle deliverable toggle
-                                // }}
-                            >
-                                Valider
-                            </Button>
+                            <Button type="submit">Valider</Button>
                         </form>
                     </FormProvider>
                 </DialogFooter>
