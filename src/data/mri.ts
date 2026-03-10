@@ -2,12 +2,13 @@
 
 import { Mri, MriStatus, Prisma } from '@prisma/client';
 
-import { sendCampaign, SendCampaignErrorCode } from '@/actions/mailchimp';
+import { sendCampaign } from '@/actions/mailchimp';
 import prisma from '@/db';
 import { htmlMRI } from '@/lib/mailchimp/html-mri';
 import { plainTextMRI } from '@/lib/mailchimp/plain-mri';
 import { getPublishableMri } from '@/lib/mailchimp/publish-mri';
 import { MailChimpList } from '@/types/mailchimp';
+import { SendCampaignErrorCode } from '@/types/mailchimp-errors';
 import {
     MRIFinishErrorCode,
     MRIFinishResult,

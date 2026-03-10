@@ -22,7 +22,7 @@ export const STUDY_STEPS: Record<StudyProgressStep, EnumInfo> = {
     InStudy: { display: 'Mission en cours' },
     Ended: { display: 'Mission finie' },
     CompanyFactored: { display: 'Entreprise facturée' },
-    AssigneePaid: { display: 'AssigneePaid' },
+    AssigneePaid: { display: 'Intervenant payé' },
     SatisfactionFormSent: { display: 'QS envoyé' },
     WarrantyExpired: { display: 'Période de garantie finie' },
 };
