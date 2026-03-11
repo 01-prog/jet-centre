@@ -21,7 +21,10 @@ RUN apk add --no-cache libc6-compat git openssl
 WORKDIR /app
 
 COPY package.json bun.lock ./
-RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile --verbose
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile --verbose || \
+    (sleep 2 && bun install --frozen-lockfile --verbose) || \
+    (sleep 5 && bun install --frozen-lockfile --verbose)
 
 
 FROM base AS dev
